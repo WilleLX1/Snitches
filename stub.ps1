@@ -12,15 +12,18 @@ function Get-CommandOutput {
         $module = $split[0]
         $argument = $split[1]
 
-        # Make a request to a url and get the content
-        $response = Invoke-WebRequest -Uri "https://raw.github.com/willelx1/snitches/modules/$module.ps1"
+        # Make a request to a URL and get the content
+        $response = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/WilleLX1/Snitches/main/Modules/$module.ps1"
         $content = $response.Content
+        
         # Log
         Write-Host "Module: $module"
         Write-Host "Argument: $argument"
 
+        # Create script block with arguments
+        $scriptBlock = [scriptblock]::Create($content)
         # Execute the module with the argument
-        $output = Invoke-Expression -Command "$content" -ArgumentList $argument
+        $output = & $scriptBlock $argument
         return $output
     }
     catch {
